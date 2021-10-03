@@ -1,6 +1,8 @@
 # weather_app
-
+Weather app to get weather at current location used OpenWeather API.
 A new Flutter project.
+# ScreenShot
+![Screenshot_20211003-181320](https://user-images.githubusercontent.com/26098900/135764954-4d2a8252-aaa7-4a2a-8460-273bb2a44009.jpg)
 
 ## Getting Started
 
