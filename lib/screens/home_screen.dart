@@ -64,7 +64,10 @@ class HomeScreen extends StatelessWidget {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     _cloudIcon(value.model!),
-                                    _temperature(value.model!.current!.temp),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    _temperature(value.model!),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -83,11 +86,7 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        Column(
-                                          children: [
-                                            details(value.model!),
-                                          ],
-                                        )
+                                        details(value.model!)
                                       ],
                                     ),
                                     _hourlyPrediction(value.model!),
@@ -106,29 +105,47 @@ class HomeScreen extends StatelessWidget {
 
   Widget _cloudIcon(WeatherModel model) {
     var iconCode = model.current!.weather!.first.icon;
-    return Column(
-      children: [
-        SizedBox(
-          height: 125,
-          child: ImageIcon(
+    return SizedBox(
+      height: 150,
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          ImageIcon(
             NetworkImage(
               'http://openweathermap.org/img/wn/$iconCode@2x.png',
             ),
-            size: 200,
+            size: double.infinity,
           ),
-        ),
-        Text(model.current!.weather!.first.main!),
-      ],
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Text(model.current!.weather!.first.main!),
+          ),
+        ],
+      ),
     );
   }
 
-  _temperature(temp) {
-    return Text(
-      temp.round().toString() + '°',
-      style: const TextStyle(
-        fontSize: 80,
-        fontWeight: FontWeight.w400,
-      ),
+  _temperature(WeatherModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text('Day ${model.daily!.first.temp!.day.round()}°'),
+            const SizedBox(
+              width: 10,
+            ),
+            Text('Night ${model.daily!.first.temp!.night.round()}°'),
+          ],
+        ),
+        Text(
+          model.current!.temp.round().toString() + '°',
+          style: const TextStyle(
+            fontSize: 80,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
     );
   }
 
@@ -158,49 +175,46 @@ class HomeScreen extends StatelessWidget {
   }
 
   details(WeatherModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text('Feels like'),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(model.current!.feelsLike.round().toString()),
-          ],
-        ),
-        Row(
-          children: [
-            const Text('Humidity'),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(model.current!.humidity.round().toString()),
-          ],
-        ),
-        Row(
-          children: [
-            const Text('Pressure'),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(model.current!.pressure.round().toString()),
-          ],
-        ),
-        Row(
-          children: [
-            const Text('Wind Speed'),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(model.current!.windSpeed.round().toString()),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
+    return SizedBox(
+      width: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Feels like'),
+              Text(model.current!.feelsLike.round().toString() + '°'),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const Text('Humidity'),
+              Text(model.current!.humidity.round().toString() + ' %'),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Pressure'),
+              Text((model.current!.pressure.round() / 1000).toString() +
+                  ' mBar'),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Wind Speed'),
+              Text(model.current!.windSpeed.round().toString() + ' Km/h'),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
     );
   }
 
